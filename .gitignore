@@ -2,6 +2,7 @@
 *.class
 .classpath
 .settings*
+bin
 
 # Log file
 *.log
