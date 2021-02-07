@@ -47,6 +47,12 @@ public class TextFieldListener extends KeyAdapter{
 	    	  		field.setText(field.getText() + Constants.KEY_D_ARROW);
 	    	  		e.consume();
 	    	  		break;
+	    	  	case KeyEvent.VK_F1,KeyEvent.VK_F2,KeyEvent.VK_F3,KeyEvent.VK_F4,
+	    	  	KeyEvent.VK_F5,KeyEvent.VK_F6,KeyEvent.VK_F7,KeyEvent.VK_F8,
+	    	  	KeyEvent.VK_F9,KeyEvent.VK_F10,KeyEvent.VK_F11,KeyEvent.VK_F12:
+	    	  		field.setText(field.getText() + KeyEvent.getKeyText(e.getKeyCode()));
+	    	  		e.consume();
+	    	  		break;
 	    	  }
 	      }
 	   }
