@@ -20,8 +20,10 @@ There are 2 modes of use:
   - **Left arrow**: "larrow".
   - **Up arrow**: "uarrow".
   - **Down arrow**: "darrow".
-  - **F1-F24**: "F1", "F2", etc. Only upper case work. Lower case will send it as Raw text
+  - **F1-F24**: "F1", "F2", etc. Only upper case work. Lower case will send it as Raw text.
+  
 Combinations of keys like "crtl+t" are not allowed for now. Keys "Windows", "Cmd", "Tab", "Shift", "Control", "Alt" and the rest of non printable keys don't do nothing.
+
 Backspace key is used to erase the configured keys.  
   
 ### Keys blocked:
