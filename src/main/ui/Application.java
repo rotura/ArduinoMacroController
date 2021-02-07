@@ -135,7 +135,8 @@ public class Application extends JFrame {
     }
 	
 	public Application() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage("Z:\\WorkSpace\\ArduinoMacroConfigurator\\src\\main\\resources\\arduino-icon.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(
+				"Z:\\WorkSpace\\ArduinoMacroConfigurator\\src\\main\\resources\\arduino-icon.png"));
 		setResizable(false);
 		setTitle("Arduino Macro Controller");
 		setSize(new Dimension(500, 520));
@@ -507,15 +508,18 @@ public class Application extends JFrame {
 									if (JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(file, "File exist, override?", "Warning",
 											JOptionPane.YES_NO_OPTION)) {
 										controller.exportConfiguration(fileToSave, generateKeysMap());
-										JOptionPane.showMessageDialog(null, "Save complete", "Info", JOptionPane.INFORMATION_MESSAGE);
+										JOptionPane.showMessageDialog(null, internalizator.getFILE_NO_SAVED(), 
+												internalizator.getINFO(), JOptionPane.INFORMATION_MESSAGE);
 									}
 								} else {
 									controller.exportConfiguration(fileToSave, generateKeysMap());
-									JOptionPane.showMessageDialog(null, "Save complete", "Info", JOptionPane.INFORMATION_MESSAGE);
+									JOptionPane.showMessageDialog(null, internalizator.getFILE_NO_SAVED(), 
+											internalizator.getINFO(), JOptionPane.INFORMATION_MESSAGE);
 								}
 							}
 						} catch (IOException ex) {
-							JOptionPane.showMessageDialog(null, "File dont save", "Warning", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, internalizator.getFILE_NO_SAVED(), 
+									internalizator.getERROR(), JOptionPane.WARNING_MESSAGE);
 						}
 	            }
 	        });
@@ -548,13 +552,16 @@ public class Application extends JFrame {
 							HashMap<String, String> valuesImported = controller.importConfiguration(fileToOpen);
 							if(valuesImported != null) {
 								chargeConfiguredData(valuesImported);
-								JOptionPane.showMessageDialog(null, "Charge complete", "Info", JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(null, internalizator.getIMPORT_SUCESSFULLY(),
+										internalizator.getINFO(), JOptionPane.INFORMATION_MESSAGE);
 							} else {
-								JOptionPane.showMessageDialog(null, "Format incorrect", "Info", JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(null, internalizator.getFORMAT_INCORRECT(), 
+										internalizator.getINFO(), JOptionPane.INFORMATION_MESSAGE);
 							}
 						}
 					} catch (IOException ex) {
-						JOptionPane.showMessageDialog(null, "Can't open the file", "Warning", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, internalizator.getCANT_OPEN_FILE(), 
+								internalizator.getERROR(), JOptionPane.WARNING_MESSAGE);
 					}
 					
 				}

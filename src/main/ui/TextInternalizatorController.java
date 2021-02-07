@@ -12,9 +12,11 @@ public class TextInternalizatorController {
 					EXIT, EXIT_MESSAGE,
 					CONNECTED, CONNECTED_MESSAGE,
 					DISCONNECTED, DISCONNECTED_MESSAGE,
-					ERROR,ERROR_MESSAGE,
+					ERROR,ERROR_MESSAGE,INFO,
 					WARNING_SIZE, WARNING_SIZE_MESSAGE1, WARNING_SIZE_MESSAGE2,
-					WARNING_PORT, WARNING_PORT_MESSAGE;
+					WARNING_PORT, WARNING_PORT_MESSAGE,
+					CANT_OPEN_FILE,FORMAT_INCORRECT,IMPORT_SUCESSFULLY,
+					FILE_NO_SAVED,FILE_SAVED,FILE_EXIST;
 	
 	
 	public TextInternalizatorController(Application application, Locale locale) {
@@ -83,6 +85,13 @@ public class TextInternalizatorController {
 		  this.WARNING_SIZE_MESSAGE1 = bundle.getString("WARNING_SIZE_MESSAGE1");
 		  this.WARNING_SIZE_MESSAGE2 = bundle.getString("WARNING_SIZE_MESSAGE2");
 		  this.WARNING_SIZE = bundle.getString("WARNING_SIZE");
+		  this.INFO = bundle.getString("INFO");
+		  this.CANT_OPEN_FILE = bundle.getString("CANT_OPEN_FILE");
+		  this.FORMAT_INCORRECT = bundle.getString("FORMAT_INCORRECT");
+		  this.IMPORT_SUCESSFULLY = bundle.getString("IMPORT_SUCESSFULLY");
+		  this.FILE_NO_SAVED = bundle.getString("FILE_NO_SAVED");
+		  this.FILE_SAVED = bundle.getString("FILE_SAVED");
+		  this.FILE_EXIST = bundle.getString("FILE_EXIST");
 	}
 
 	public void updateConnectButton() {
@@ -164,6 +173,34 @@ public class TextInternalizatorController {
 
 	public String getDISCONNECTED_MESSAGE() {
 		return DISCONNECTED_MESSAGE;
+	}
+	
+	public String getINFO() {
+		return INFO;
+	}
+	
+	public String getCANT_OPEN_FILE() {
+		return CANT_OPEN_FILE;
+	}
+	
+	public String getFORMAT_INCORRECT() {
+		return FORMAT_INCORRECT;
+	}
+	
+	public String getIMPORT_SUCESSFULLY() {
+		return IMPORT_SUCESSFULLY;
+	}
+	
+	public String getFILE_NO_SAVED() {
+		return FILE_NO_SAVED;
+	}
+	
+	public String getFILE_SAVED() {
+		return FILE_SAVED;
+	}
+	
+	public String getFILE_EXIST() {
+		return FILE_EXIST;
 	}
 	
 }
