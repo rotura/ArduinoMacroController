@@ -218,13 +218,18 @@ public class Application extends JFrame {
 	private void chargeUsserSetting() {
 		try {
 			String[] userSettings = this.controller.chargeAppStatus();
-			this.internalizator.setLocale(new Locale(userSettings[0]));
-			Integer keys = Integer.parseInt(userSettings[1]);
-			if(Constants.keysConfigurables.contains(keys)) {
-				this.keysNumber.setValue(keys);
+			if(userSettings!= null) {
+				this.internalizator.setLocale(new Locale(userSettings[0]));
+				Integer keys = Integer.parseInt(userSettings[1]);
+				if(Constants.keysConfigurables.contains(keys)) {
+					this.keysNumber.setValue(keys);
+				}
+			} else {
+				LOGGER.log(Level.INFO, "userSettings not found");
+
 			}
 		} catch (IOException e) {
-			LOGGER.log(Level.INFO, "userSettings not found");
+			LOGGER.log(Level.SEVERE, "IOException", e);
 		}		
 	}
 
