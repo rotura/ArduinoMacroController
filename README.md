@@ -20,7 +20,7 @@ You can import any ".arconf" file with a valid format that will be charged on th
 If you have an "arconf" folder with valid files in the same folder than the App, all valid templates will be charged on a selector.
 
 ### Keys available:
-There are 2 modes of use:
+There are 3 modes of use:
 - **Raw text**: Up to 14 characters (For EEPROM saving, using more only work in "local" mode).
 - **Special keys**: This keys are entered as text in the key's fields (if you press the key in the field the correspond text will be written). Only work 1 Special key for key configured. If more than one Special key or a Special key with other character is written in the field, the data will be send but the Arduino will catch only the first Special key and ignore the rest of the data. Available special keys are:
   - **Space bar**: "space" or "".
@@ -36,7 +36,7 @@ There are 2 modes of use:
   - **Tab**: "tab".
   - **Esc**: "esc".
   - **F1-F24**: "F1", "F2", etc. Only upper case work. Lower case will send it as Raw text
-- **Combinations**: Now a key can be configured as a combination of keys pressed. All **Special keys** can be combined with single keys or between its using "+" as separator. Example: "ctrl+shift+t", "alt+tab", "ctrl+alt+F1".
+- **Combinations**: Combination of keys pressed. All **Special keys** can be combined with single keys or between them using "+" as separator. Example: "ctrl+shift+t", "alt+tab", "ctrl+alt+F1".
 
 Backspace key is used to erase the configured keys.  
   
