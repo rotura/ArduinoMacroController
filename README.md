@@ -1,6 +1,6 @@
 # ArduinoMacroController
 
-Little java application to configure an Arduino with a custom sketch (linked here when uploaded) throw the serial port for use as a mini macro keyboard with RGB illumination.
+Little java application to configure an Arduino with a custom sketch (https://github.com/rotura/ArduinoMacroKeyboard) throw the serial port for use as a mini macro keyboard with RGB illumination.
 
 ## Manual
 Steps:
