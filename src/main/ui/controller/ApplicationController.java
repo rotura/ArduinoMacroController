@@ -2,7 +2,6 @@ package main.ui.controller;
 
 import java.util.HashMap;
 import java.util.Set;
-import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -24,7 +24,7 @@ import main.utils.Constants;
 
 public class ApplicationController {
     private final static Logger LOGGER = Logger.getLogger("ApplicationController");
-	
+    
 	private SerialPort[] ports;
 	private SerialPort activePort;
 	private int status = Constants.STATUS_DISCONNECTED;
@@ -32,19 +32,19 @@ public class ApplicationController {
 	private HashMap<String,String> keyValuesPersisted = new HashMap<String, String>();
 	private TextInternalizatorController internalizator;	
 	
-	public ApplicationController(TextInternalizatorController internalizator) {
+	public ApplicationController(TextInternalizatorController internalizator, Handler logger) {
 		super();
 		initSetup();
 		this.internalizator = internalizator;
 		this.ports = SerialPort.getCommPorts();
         try {
-			Handler fileHandler = new FileHandler("./arduinoMacroController.log", true);
+			Handler fileHandler = logger;
 			SimpleFormatter simpleFormatter = new SimpleFormatter();
             fileHandler.setFormatter(simpleFormatter);
             LOGGER.addHandler(fileHandler);
             fileHandler.setLevel(Level.ALL);
-		} catch (SecurityException | IOException e) {
-			e.printStackTrace();
+		} catch (SecurityException e) {
+			LOGGER.log(Level.SEVERE, "Error creating ApplicationController", e);
 		}
 
 	}
@@ -153,7 +153,6 @@ public class ApplicationController {
 	
 	// Send a petition to the Arduino to get the Keys data
 	private HashMap<String,String> getArduinoConfiguration() {
-	    LOGGER.log(Level.INFO, "Getting configuration from serial...");
 		if(this.activePort != null) {
 			activePort.openPort();
 			try {
@@ -175,7 +174,7 @@ public class ApplicationController {
 	    					JOptionPane.WARNING_MESSAGE);
 			    }
 			} catch (Exception e) { 
-				LOGGER.log(Level.WARNING, "Exceptions getting configuration: ", e);
+				LOGGER.log(Level.SEVERE, "Exceptions getting configuration: ", e);
 			} finally {
 				activePort.closePort();
 			}
@@ -248,4 +247,35 @@ public class ApplicationController {
 		return result;
 	}
 	
+	public File[] getConfFiles() {		
+		File f = new File("./arconf");
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(File f, String name) {
+                return name.endsWith(".arconf");
+            }
+        };
+
+       return f.listFiles(filter);
+	}
+
+	public void saveAppStatus(int keys) throws IOException {
+		File f = new File("./arconf/userSetting.conf");
+
+		FileWriter save = new FileWriter(f);
+		String writeBuffer = this.internalizator.getLocaleToUserSettings() + "," + keys;
+		save.write(writeBuffer);
+		save.close();	
+	}
+	
+	public String[] chargeAppStatus() throws IOException {
+		File f = new File("./arconf/userSetting.conf");
+		if(f.exists()) {
+			String fileReaded = Files.readString(Paths.get(f.getAbsolutePath()));
+	        if(fileReaded.matches("..,.")) {
+	    		return fileReaded.split(",");
+	        }	
+		}
+		return null;
+	}
 }

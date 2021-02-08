@@ -2,30 +2,16 @@ package main.ui;
 
 import javax.swing.*;
 
-import com.fazecast.jSerialComm.SerialPort;
-
 import java.awt.*; 
-import java.util.Vector; 
 
 // got this workaround from the following bug: 
 //      http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4618607 
-public class WideComboBox<E> extends JComboBox<SerialPort>{ 
+public class WideComboBox<E> extends JComboBox<E>{ 
 
 	private static final long serialVersionUID = 1L;
 
 	public WideComboBox() { 
-    } 
-
-    public WideComboBox(final SerialPort items[]){ 
-        super(items); 
-    } 
-
-    public WideComboBox(Vector<SerialPort> items) { 
-        super(items); 
-    } 
-
-        public WideComboBox(ComboBoxModel<SerialPort> aModel) { 
-        super(aModel); 
+		super();
     } 
 
     private boolean layingOut = false; 

@@ -5,7 +5,8 @@ import com.fazecast.jSerialComm.SerialPort;
 import main.ui.controller.ApplicationController;
 import main.ui.listener.TextFieldListener;
 import main.utils.Constants;
-import main.utils.PortRenderer;
+import main.utils.renderer.PortRenderer;
+import main.utils.renderer.TemplateRenderer;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -14,6 +15,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.SpinnerListModel;
+
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Insets;
@@ -22,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -52,7 +56,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import java.awt.Toolkit;
 import javax.swing.JSlider;
 import javax.swing.JPanel;
 
@@ -71,7 +74,7 @@ public class Application extends JFrame {
 	private JLabel lblKey2;
 	private JTextField textKey1;
 	private JTextField textKey2;
-	private JButton btnUpdatePorts;
+	private JButton btnUpdateLists;
 	private JMenuBar menuBar;
 	private JMenu menuOptions;
 	private Component horizontalGlue;
@@ -114,10 +117,22 @@ public class Application extends JFrame {
 	private JButton btnRestoreRGB;
 	private JLabel lblExample;
 	private JPanel panelRGB;
+	private JComboBox<File> templateSelect;
+	private JLabel lblTemplate;
+	private JButton btnTemplate;
 	
 	public static void main(String[] args) {
+		Application ventana=new Application(); 
+		ventana.setVisible(true); 
+		ventana.setResizable(false);
+        LOGGER.log(Level.INFO, "Aplication started");
+    }
+
+	public Application() {
+		Handler fileHandler = null;
 		try {
-	        Handler fileHandler = new FileHandler("./arduinoMacroController.log", true);
+			generateFolders();
+			fileHandler = new FileHandler("./arconf/log/arduinoMacroController.log", true);
 	        SimpleFormatter simpleFormatter = new SimpleFormatter();
             fileHandler.setFormatter(simpleFormatter);
             LOGGER.addHandler(fileHandler);
@@ -127,22 +142,13 @@ public class Application extends JFrame {
         } catch (SecurityException ex) {
             LOGGER.log(Level.SEVERE, "Security exception", ex);
         }
-		
-		Application ventana=new Application(); 
-		ventana.setVisible(true); 
-		ventana.setResizable(false);
-        LOGGER.log(Level.INFO, "Aplication started");
-    }
-	
-	public Application() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(
-				"Z:\\WorkSpace\\ArduinoMacroConfigurator\\src\\main\\resources\\arduino-icon.png"));
+		setIconImage(resizeImage("arduino-icon.png").getImage());
 		setResizable(false);
 		setTitle("Arduino Macro Controller");
 		setSize(new Dimension(500, 520));
 		setLocationRelativeTo(null);
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e){
                 exit();
@@ -150,7 +156,7 @@ public class Application extends JFrame {
         });
 		
 		this.internalizator = new TextInternalizatorController(this, getLocale());
-		this.controller = new ApplicationController(this.internalizator);
+		this.controller = new ApplicationController(this.internalizator, fileHandler);
 		
 		getContentPane().setLayout(null);
 		getContentPane().add(getComPortSelect());
@@ -161,7 +167,7 @@ public class Application extends JFrame {
 		getContentPane().add(getLblKey2());
 		getContentPane().add(getTextKey1());
 		getContentPane().add(getTextKey2());
-		getContentPane().add(getBtnUpdatePorts());
+		getContentPane().add(getBtnUpdateLists());
 		getContentPane().add(getBtnRestore1());
 		getContentPane().add(getBtnRestore2());
 		getContentPane().add(getBtnRestoreAll());
@@ -195,15 +201,33 @@ public class Application extends JFrame {
 		getContentPane().add(getBtnRestoreRGB());
 		getContentPane().add(getLblExample());
 		getContentPane().add(getPanelRGB());
+		getContentPane().add(getTemplateSelect());
+		getContentPane().add(getLblTemplate());
+		getContentPane().add(getBtnTemplate());
 		setJMenuBar(getMenuBar_1());
 		
+		chargeUsserSetting();
 		this.internalizator.updateGUITexts();
+		
 	}
 	
 	  ///////////////////////
 	 ///   UI ELEMENTS   ///
 	///////////////////////
 	
+	private void chargeUsserSetting() {
+		try {
+			String[] userSettings = this.controller.chargeAppStatus();
+			this.internalizator.setLocale(new Locale(userSettings[0]));
+			Integer keys = Integer.parseInt(userSettings[1]);
+			if(Constants.keysConfigurables.contains(keys)) {
+				this.keysNumber.setValue(keys);
+			}
+		} catch (IOException e) {
+			LOGGER.log(Level.INFO, "userSettings not found");
+		}		
+	}
+
 	private JComboBox<SerialPort> getComPortSelect() {
 		if (comPortSelect == null) {
 			comPortSelect = new WideComboBox<SerialPort>();
@@ -217,7 +241,8 @@ public class Application extends JFrame {
 			    public void actionPerformed(ActionEvent e) {
 			        btnConnect.grabFocus();
 			    }
-			});			comPortSelect.setRenderer(new PortRenderer());
+			});			
+			comPortSelect.setRenderer(new PortRenderer());
 		}
 		return comPortSelect;
 	}
@@ -325,29 +350,33 @@ public class Application extends JFrame {
 		}
 		return textKey2;
 	}
-	protected JButton getBtnUpdatePorts() {
-		if (btnUpdatePorts == null) {
-			btnUpdatePorts = new JButton("Update ports");
-			btnUpdatePorts.setEnabled(true);
-			btnUpdatePorts.setMnemonic('u');
-			btnUpdatePorts.setMnemonic(KeyEvent.VK_U);
-			btnUpdatePorts.setBounds(10, 423, 150, 23);
-			btnUpdatePorts.setMargin(new Insets(2, 5, 2, 5));
-			btnUpdatePorts.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			btnUpdatePorts.setIcon(resizeImage("Refresh-icon.png"));  
+	protected JButton getBtnUpdateLists() {
+		if (btnUpdateLists == null) {
+			btnUpdateLists = new JButton("Update ports");
+			btnUpdateLists.setEnabled(true);
+			btnUpdateLists.setMnemonic('u');
+			btnUpdateLists.setMnemonic(KeyEvent.VK_U);
+			btnUpdateLists.setBounds(10, 423, 150, 23);
+			btnUpdateLists.setMargin(new Insets(2, 5, 2, 5));
+			btnUpdateLists.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			btnUpdateLists.setIcon(resizeImage("Refresh-icon.png"));  
 			
-			btnUpdatePorts.addActionListener(new ActionListener() { 
+			btnUpdateLists.addActionListener(new ActionListener() { 
 				  public void actionPerformed(ActionEvent e) { 
 					  if(controller.getStatus() == Constants.STATUS_DISCONNECTED) {
 						  comPortSelect.removeAllItems();
+						  templateSelect.removeAllItems();
 						  for (SerialPort port: controller.getPorts()) {
 							comPortSelect.addItem(port);
+						  }
+						  for (File file: controller.getConfFiles()) {
+							  templateSelect.addItem(file);
 						  }
 					  }
 				  } 
 				} );
 		}
-		return btnUpdatePorts;
+		return btnUpdateLists;
 	}
 	private JMenuBar getMenuBar_1() {
 		if (menuBar == null) {
@@ -491,33 +520,35 @@ public class Application extends JFrame {
 			mntmExportConfiguration.addActionListener(new ActionListener() { 
 				  public void actionPerformed(ActionEvent me) {
 					  try {
-							JFileChooser file = new JFileChooser(System.getProperty("user.dir"));
-							FileFilter ff = new FileNameExtensionFilter("Valid files", "conf");
+							JFileChooser file = new JFileChooser(System.getProperty("user.dir") + "/arconf");
+							FileFilter ff = new FileNameExtensionFilter("Valid files", "arconf");
 							file.addChoosableFileFilter(ff);
 							file.setFileFilter(ff);
 							file.setDialogTitle("Export");
 							file.showSaveDialog(file);
-							File fileToSave = null;
-							if(file.getSelectedFile().getAbsolutePath().contains(".conf")) {
-								fileToSave = file.getSelectedFile();
-							} else {
-								fileToSave = new File(file.getSelectedFile() +".conf");
+							File fileToSave = file.getSelectedFile();
+							if(fileToSave == null) {
+								return;
+							}
+							if(!fileToSave.getName().contains(".arconf")) {
+								fileToSave = new File(file.getSelectedFile() +".arconf");	
 							}
 							if (fileToSave != null) {
 								if (new File(fileToSave.getAbsolutePath()).exists()) {
-									if (JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(file, "File exist, override?", "Warning",
-											JOptionPane.YES_NO_OPTION)) {
+									if (JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(file, internalizator.getFILE_EXIST(), 
+											internalizator.getINFO(), JOptionPane.YES_NO_OPTION)) {
 										controller.exportConfiguration(fileToSave, generateKeysMap());
-										JOptionPane.showMessageDialog(null, internalizator.getFILE_NO_SAVED(), 
+										JOptionPane.showMessageDialog(null, internalizator.getFILE_SAVED(), 
 												internalizator.getINFO(), JOptionPane.INFORMATION_MESSAGE);
 									}
 								} else {
 									controller.exportConfiguration(fileToSave, generateKeysMap());
-									JOptionPane.showMessageDialog(null, internalizator.getFILE_NO_SAVED(), 
+									JOptionPane.showMessageDialog(null, internalizator.getFILE_SAVED(), 
 											internalizator.getINFO(), JOptionPane.INFORMATION_MESSAGE);
 								}
 							}
 						} catch (IOException ex) {
+							LOGGER.log(Level.SEVERE, "Error exporting conf",ex);
 							JOptionPane.showMessageDialog(null, internalizator.getFILE_NO_SAVED(), 
 									internalizator.getERROR(), JOptionPane.WARNING_MESSAGE);
 						}
@@ -639,10 +670,11 @@ public class Application extends JFrame {
 		return lblKeys;
 	}
 	
-	private JSpinner getKeysNumber() {
+	protected JSpinner getKeysNumber() {
 		if (keysNumber == null) {
 			keysNumber = new JSpinner();
-			keysNumber.setModel(new SpinnerNumberModel(2, 2, 6, 2));
+			List<Integer> keys = Constants.keysConfigurables;
+			keysNumber.setModel(new SpinnerListModel(keys));
 			keysNumber.setBounds(296, 12, 30, 20);
 		}
 		return keysNumber;
@@ -966,6 +998,65 @@ public class Application extends JFrame {
 		return panelRGB;
 	}
 	
+	private JComboBox<File> getTemplateSelect() {
+		if (templateSelect == null) {
+			templateSelect = new WideComboBox<File>();
+			templateSelect.setEnabled(false);
+			templateSelect.setBounds(95, 242, 129, 22);
+			File[] files = controller.getConfFiles();
+			if(files == null) {
+				JOptionPane.showMessageDialog(null, "\"arconf\" folder not found.", "Template folder not found", 
+						JOptionPane.WARNING_MESSAGE);
+			} else {
+				for (File file: files) {
+					templateSelect.addItem(file);
+				}
+			}
+			templateSelect.addActionListener (new ActionListener () {
+			    public void actionPerformed(ActionEvent e) {
+			    	btnTemplate.grabFocus();
+			    }
+			});	
+			templateSelect.setRenderer(new TemplateRenderer());
+		}
+		return templateSelect;
+	}
+	protected JLabel getLblTemplate() {
+		if (lblTemplate == null) {
+			lblTemplate = new JLabel("Template:");
+			lblTemplate.setLabelFor(getTemplateSelect());
+			lblTemplate.setBounds(10, 246, 75, 14);
+		}
+		return lblTemplate;
+	}
+	protected JButton getBtnTemplate() {
+		if (btnTemplate == null) {
+			btnTemplate = new JButton("Charge");
+			btnTemplate.setEnabled(false);
+			btnTemplate.setBounds(234, 242, 89, 23);
+			btnTemplate.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			
+			btnTemplate.addActionListener(new ActionListener() { 
+				  public void actionPerformed(ActionEvent e) { 
+					loadTemplate();
+				  }
+			} );
+			btnTemplate.addKeyListener(new KeyListener() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode()==KeyEvent.VK_ENTER) {
+						loadTemplate();
+					}
+				}
+				@Override
+				public void keyTyped(KeyEvent e) {}
+				@Override
+				public void keyReleased(KeyEvent e) {}	
+			});
+		}
+		return btnTemplate;
+	}
+	
 	  ////////////////////////
 	 //  INTERNAL METHODS  //
 	////////////////////////
@@ -977,6 +1068,11 @@ public class Application extends JFrame {
 		int i=JOptionPane.showConfirmDialog(null, internalizator.getEXIT_MESSAGE(), internalizator.getEXIT(), 
 				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if(i==JOptionPane.YES_OPTION) {
+        	try {
+				controller.saveAppStatus((int)this.keysNumber.getValue());
+			} catch (IOException e) {
+				LOGGER.log(Level.SEVERE, "Error saving userSettings", e);
+			}
         	LOGGER.log(Level.INFO, "Application exit.");
             System.exit(0);
         }
@@ -1036,7 +1132,7 @@ public class Application extends JFrame {
 	private void disableFields() {
 		// Enable conf fields
 		comPortSelect.setEnabled(true);
-		btnUpdatePorts.setEnabled(true);
+		btnUpdateLists.setEnabled(true);
 		keysNumber.setEnabled(true);
 		
 		// Disabled Arduino fields
@@ -1060,6 +1156,8 @@ public class Application extends JFrame {
 		btnRestoreRGB.setEnabled(false);
 		mntmExportConfiguration.setEnabled(false);
 		mntmImportConfiguration.setEnabled(false);
+		templateSelect.setEnabled(true);
+		btnTemplate.setEnabled(true);
 		
 		// Reset Arduino fields
 		textKey1.setText("");
@@ -1085,7 +1183,7 @@ public class Application extends JFrame {
 		// Disable conf fields
 		comPortSelect.setEnabled(false);
 		keysNumber.setEnabled(false);
-		btnUpdatePorts.setEnabled(false);
+		btnUpdateLists.setEnabled(false);
 		
 		// Enable Arduino fields
 		textKey1.setEnabled(true);
@@ -1115,6 +1213,10 @@ public class Application extends JFrame {
 			textKey6.setEnabled(true);
 			btnRestore5.setEnabled(true);
 			btnRestore6.setEnabled(true);
+		}
+		if(templateSelect.getItemCount() > 0) {
+			templateSelect.setEnabled(true);
+			btnTemplate.setEnabled(true);
 		}
 	}
 
@@ -1185,6 +1287,35 @@ public class Application extends JFrame {
 		Color color = new Color((int)spinner_R.getValue(),(int)spinner_G.getValue(),(int)spinner_B.getValue());
 		panelRGB.setBackground(color);
 		panelRGB.setOpaque(true);
-	};
+	}
+	
+	/*
+	 * Import the template to the App
+	 */
+	private void loadTemplate() {
+		File file = (File) templateSelect.getSelectedItem();
+		if(file != null) {
+		    try {
+		    	chargeConfiguredData(controller.importConfiguration(file));
+				LOGGER.log(Level.INFO, "Template loaded: " + file.getName());
+			} catch (IOException em) {
+				LOGGER.log(Level.SEVERE, "Error loading template", em);
+			}
+		}
+	} 
+	
+	/*
+	 * Generate the folder structure of the App
+	 */
+	private static void generateFolders() {
+		File f = new File("./arconf");
+		if(!f.exists()) {
+			f.mkdir();
+		}	
+		File f2 = new File("./arconf/log");
+		if(!f2.exists()) {
+			f2.mkdir();
+		}
+	}
 	
 }

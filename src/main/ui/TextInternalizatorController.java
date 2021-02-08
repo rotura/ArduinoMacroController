@@ -25,6 +25,10 @@ public class TextInternalizatorController {
 		setLocale(locale);
 	}
 	
+	public String getLocaleToUserSettings() {
+		return this.locale.getLanguage();
+	}
+	
 	public void updateGUITexts() {
 		  ResourceBundle bundle = ResourceBundle.getBundle("Messages", locale);  
 		  application.getComLabel().setText(bundle.getString("comLabel"));
@@ -37,7 +41,7 @@ public class TextInternalizatorController {
 		  application.getLblKey4().setText(bundle.getString("lblKey") + " 4:");
 		  application.getLblKey5().setText(bundle.getString("lblKey") + " 5:");
 		  application.getLblKey6().setText(bundle.getString("lblKey") + " 6:");
-		  application.getBtnUpdatePorts().setText(bundle.getString("btnUpdatePorts"));
+		  application.getBtnUpdateLists().setText(bundle.getString("btnUpdateLists"));
 		  application.getMenuOptions().setText(bundle.getString("menuOptions"));
 		  application.getBtnExit().setText(bundle.getString("btnExit"));
 		  application.getMntmExportConfiguration().setText(bundle.getString("exportConf"));
@@ -55,6 +59,8 @@ public class TextInternalizatorController {
 		  application.getMntmEnglish().setText(bundle.getString("english"));
 		  application.getMntmSpanish().setText(bundle.getString("spanish"));
 		  application.getLblExample().setText(bundle.getString("example"));
+		  application.getBtnTemplate().setText(bundle.getString("chargeBtn"));
+		  application.getLblTemplate().setText(bundle.getString("template"));
 	}
 
 	public void setLocale(Locale locale) {
