@@ -1275,10 +1275,14 @@ public class Application extends JFrame {
 		HashMap<String,String> keys = new HashMap<String, String>();
 		  keys.put("0", textKey1.getText());
 		  keys.put("1", textKey2.getText());
-		  keys.put("2", textKey3.getText());
-		  keys.put("3", textKey4.getText());
-		  keys.put("4", textKey5.getText());
-		  keys.put("5", textKey6.getText());
+		  if((int)keysNumber.getValue() > 2) {
+			  keys.put("2", textKey3.getText());
+			  keys.put("3", textKey4.getText());
+			}
+			if((int)keysNumber.getValue() > 4) {
+				 keys.put("4", textKey5.getText());
+				  keys.put("5", textKey6.getText());
+			}
 		  keys.put("R", spinner_R.getValue().toString());
 		  keys.put("G", spinner_G.getValue().toString());
 		  keys.put("B", spinner_B.getValue().toString());
