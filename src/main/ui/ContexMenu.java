@@ -24,6 +24,7 @@ public class ContexMenu extends JPopupMenu {
 	    		item.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent me) {
 						parent.setText(parent.getText() + key.getKey());
+						parent.grabFocus();
 					}
 	    		});
 	    		add(item);
