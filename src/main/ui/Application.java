@@ -3,6 +3,8 @@ package main.ui;
 import com.fazecast.jSerialComm.SerialPort;
 
 import main.ui.controller.ApplicationController;
+import main.ui.controller.ContexMenuController;
+import main.ui.listener.ContexMenuListener;
 import main.ui.listener.TextFieldListener;
 import main.utils.Constants;
 import main.utils.renderer.PortRenderer;
@@ -65,6 +67,7 @@ public class Application extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private ApplicationController controller;
 	private TextInternalizatorController internalizator;
+	private ContexMenuController contextMenu;
 	
 	private JComboBox<SerialPort> comPortSelect;
 	private JLabel comLabel;
@@ -157,6 +160,7 @@ public class Application extends JFrame {
 		
 		this.internalizator = new TextInternalizatorController(this, getLocale());
 		this.controller = new ApplicationController(this.internalizator, fileHandler);
+		this.contextMenu = new ContexMenuController(this.internalizator, fileHandler);
 		
 		getContentPane().setLayout(null);
 		getContentPane().add(getComPortSelect());
@@ -342,6 +346,7 @@ public class Application extends JFrame {
 			textKey1.setBounds(95, 56, 228, 20);
 			textKey1.setColumns(10);
 			textKey1.addKeyListener(new TextFieldListener(textKey1));
+			textKey1.addMouseListener(new ContexMenuListener(contextMenu, textKey1));
 		}
 		return textKey1;
 	}
@@ -352,9 +357,147 @@ public class Application extends JFrame {
 			textKey2.setColumns(10);
 			textKey2.setBounds(95, 87, 228, 20);
 			textKey2.addKeyListener(new TextFieldListener(textKey2));
+			textKey2.addMouseListener(new ContexMenuListener(contextMenu, textKey2));
 		}
 		return textKey2;
 	}
+	
+	protected JLabel getLblKey3() {
+		if (lblKey3 == null) {
+			lblKey3 = new JLabel("Key 3:");
+			lblKey3.setLabelFor(getTextKey3());
+			lblKey3.setBounds(10, 119, 46, 14);
+		}
+		return lblKey3;
+	}
+	private JTextField getTextKey3() {
+		if (textKey3 == null) {
+			textKey3 = new JTextField();
+			textKey3.setEnabled(false);
+			textKey3.setColumns(10);
+			textKey3.setBounds(95, 116, 228, 20);
+			textKey3.addKeyListener(new TextFieldListener(textKey3));
+			textKey3.addMouseListener(new ContexMenuListener(contextMenu, textKey3));
+		}
+		return textKey3;
+	}
+	protected JButton getBtnRestore3() {
+		if (btnRestore3 == null) {
+			btnRestore3 = new JButton("Restore");
+			btnRestore3.setHorizontalAlignment(SwingConstants.LEFT);
+			btnRestore3.setEnabled(false);
+			btnRestore3.setBounds(333, 115, 142, 23);
+			btnRestore3.setIcon(resizeImage("Trash-icon.png"));  
+			btnRestore3.addActionListener(new ActionListener() { 
+				  public void actionPerformed(ActionEvent e) { 
+					  textKey3.setText(controller.getKeyConfiguration().get("2"));
+				  } 
+				} );		
+			}
+		return btnRestore3;
+	}
+	protected JLabel getLblKey4() {
+		if (lblKey4 == null) {
+			lblKey4 = new JLabel("Key 4:");
+			lblKey4.setLabelFor(getTextKey4());
+			lblKey4.setBounds(10, 150, 46, 14);
+		}
+		return lblKey4;
+	}
+	private JTextField getTextKey4() {
+		if (textKey4 == null) {
+			textKey4 = new JTextField();
+			textKey4.setEnabled(false);
+			textKey4.setColumns(10);
+			textKey4.setBounds(95, 147, 228, 20);
+			textKey4.addKeyListener(new TextFieldListener(textKey4));
+			textKey4.addMouseListener(new ContexMenuListener(contextMenu, textKey4));
+		}
+		return textKey4;
+	}
+	protected JButton getBtnRestore4() {
+		if (btnRestore4 == null) {
+			btnRestore4 = new JButton("Restore");
+			btnRestore4.setHorizontalAlignment(SwingConstants.LEFT);
+			btnRestore4.setEnabled(false);
+			btnRestore4.setBounds(333, 147, 142, 23);
+			btnRestore4.setIcon(resizeImage("Trash-icon.png"));  
+			btnRestore4.addActionListener(new ActionListener() { 
+				  public void actionPerformed(ActionEvent e) { 
+					  textKey4.setText(controller.getKeyConfiguration().get("3"));
+				  } 
+				} );		}
+		return btnRestore4;
+	}
+	protected JLabel getLblKey5() {
+		if (lblKey5 == null) {
+			lblKey5 = new JLabel("Key 5:");
+			lblKey5.setLabelFor(getTextKey5());
+			lblKey5.setBounds(10, 180, 46, 14);
+		}
+		return lblKey5;
+	}
+	private JTextField getTextKey5() {
+		if (textKey5 == null) {
+			textKey5 = new JTextField();
+			textKey5.setEnabled(false);
+			textKey5.setColumns(10);
+			textKey5.setBounds(95, 177, 228, 20);
+			textKey5.addKeyListener(new TextFieldListener(textKey5));
+			textKey5.addMouseListener(new ContexMenuListener(contextMenu, textKey5));
+		}
+		return textKey5;
+	}
+	protected JButton getBtnRestore5() {
+		if (btnRestore5 == null) {
+			btnRestore5 = new JButton("Restore");
+			btnRestore5.setHorizontalAlignment(SwingConstants.LEFT);
+			btnRestore5.setEnabled(false);
+			btnRestore5.setBounds(333, 176, 142, 23);
+			btnRestore5.setIcon(resizeImage("Trash-icon.png"));  
+			btnRestore5.addActionListener(new ActionListener() { 
+				  public void actionPerformed(ActionEvent e) { 
+					  textKey5.setText(controller.getKeyConfiguration().get("4"));
+				  } 
+				} );
+		}
+		return btnRestore5;
+	}
+	protected JLabel getLblKey6() {
+		if (lblKey6 == null) {
+			lblKey6 = new JLabel("Key 6:");
+			lblKey6.setLabelFor(getTextKey6());
+			lblKey6.setBounds(10, 212, 46, 14);
+		}
+		return lblKey6;
+	}
+	private JTextField getTextKey6() {
+		if (textKey6 == null) {
+			textKey6 = new JTextField();
+			textKey6.setEnabled(false);
+			textKey6.setColumns(10);
+			textKey6.setBounds(95, 209, 228, 20);
+			textKey6.addKeyListener(new TextFieldListener(textKey6));
+			textKey6.addMouseListener(new ContexMenuListener(contextMenu, textKey6));
+		}
+		return textKey6;
+	}
+	protected JButton getBtnRestore6() {
+		if (btnRestore6 == null) {
+			btnRestore6 = new JButton("Restore");
+			btnRestore6.setHorizontalAlignment(SwingConstants.LEFT);
+			btnRestore6.setEnabled(false);
+			btnRestore6.setBounds(333, 208, 142, 23);
+			btnRestore6.setIcon(resizeImage("Trash-icon.png"));  
+			btnRestore6.addActionListener(new ActionListener() { 
+				  public void actionPerformed(ActionEvent e) { 
+					  textKey6.setText(controller.getKeyConfiguration().get("5"));
+				  } 
+				} );
+		}
+		return btnRestore6;
+	}
+	
 	protected JButton getBtnUpdateLists() {
 		if (btnUpdateLists == null) {
 			btnUpdateLists = new JButton("Update ports");
@@ -451,6 +594,7 @@ public class Application extends JFrame {
 			        LOGGER.log(Level.INFO, "Language changed to ES");
 	            	internalizator.setLocale(new Locale("es","ES"));
 	            	internalizator.updateGUITexts();
+	            	contextMenu.generateContextMenu();
 	            }
 	        });
 		}
@@ -466,6 +610,7 @@ public class Application extends JFrame {
 			        LOGGER.log(Level.INFO, "Language changed to US");
 	            	internalizator.setLocale(Locale.ENGLISH);
 	            	internalizator.updateGUITexts();
+	            	contextMenu.generateContextMenu();
 	            }
 	        });
 		}
@@ -576,7 +721,7 @@ public class Application extends JFrame {
 				public void actionPerformed(ActionEvent me) {
 					try {
 						JFileChooser file = new JFileChooser(System.getProperty("user.dir"));
-						FileFilter ff = new FileNameExtensionFilter("Valid files", "conf");
+						FileFilter ff = new FileNameExtensionFilter("Valid files", "arconf");
 						file.addChoosableFileFilter(ff);
 						file.setFileFilter(ff);
 						file.setDialogTitle("Import");
@@ -831,137 +976,7 @@ public class Application extends JFrame {
 		return btnTest;
 	}
 	
-	protected JLabel getLblKey3() {
-		if (lblKey3 == null) {
-			lblKey3 = new JLabel("Key 3:");
-			lblKey3.setLabelFor(getTextKey3());
-			lblKey3.setBounds(10, 119, 46, 14);
-		}
-		return lblKey3;
-	}
-	private JTextField getTextKey3() {
-		if (textKey3 == null) {
-			textKey3 = new JTextField();
-			textKey3.setEnabled(false);
-			textKey3.setColumns(10);
-			textKey3.setBounds(95, 116, 228, 20);
-			textKey3.addKeyListener(new TextFieldListener(textKey3));
-		}
-		return textKey3;
-	}
-	protected JButton getBtnRestore3() {
-		if (btnRestore3 == null) {
-			btnRestore3 = new JButton("Restore");
-			btnRestore3.setHorizontalAlignment(SwingConstants.LEFT);
-			btnRestore3.setEnabled(false);
-			btnRestore3.setBounds(333, 115, 142, 23);
-			btnRestore3.setIcon(resizeImage("Trash-icon.png"));  
-			btnRestore3.addActionListener(new ActionListener() { 
-				  public void actionPerformed(ActionEvent e) { 
-					  textKey3.setText(controller.getKeyConfiguration().get("2"));
-				  } 
-				} );		
-			}
-		return btnRestore3;
-	}
-	protected JLabel getLblKey4() {
-		if (lblKey4 == null) {
-			lblKey4 = new JLabel("Key 4:");
-			lblKey4.setLabelFor(getTextKey4());
-			lblKey4.setBounds(10, 150, 46, 14);
-		}
-		return lblKey4;
-	}
-	private JTextField getTextKey4() {
-		if (textKey4 == null) {
-			textKey4 = new JTextField();
-			textKey4.setEnabled(false);
-			textKey4.setColumns(10);
-			textKey4.setBounds(95, 147, 228, 20);
-			textKey4.addKeyListener(new TextFieldListener(textKey4));
-		}
-		return textKey4;
-	}
-	protected JButton getBtnRestore4() {
-		if (btnRestore4 == null) {
-			btnRestore4 = new JButton("Restore");
-			btnRestore4.setHorizontalAlignment(SwingConstants.LEFT);
-			btnRestore4.setEnabled(false);
-			btnRestore4.setBounds(333, 147, 142, 23);
-			btnRestore4.setIcon(resizeImage("Trash-icon.png"));  
-			btnRestore4.addActionListener(new ActionListener() { 
-				  public void actionPerformed(ActionEvent e) { 
-					  textKey4.setText(controller.getKeyConfiguration().get("3"));
-				  } 
-				} );		}
-		return btnRestore4;
-	}
-	protected JLabel getLblKey5() {
-		if (lblKey5 == null) {
-			lblKey5 = new JLabel("Key 5:");
-			lblKey5.setLabelFor(getTextKey5());
-			lblKey5.setBounds(10, 180, 46, 14);
-		}
-		return lblKey5;
-	}
-	private JTextField getTextKey5() {
-		if (textKey5 == null) {
-			textKey5 = new JTextField();
-			textKey5.setEnabled(false);
-			textKey5.setColumns(10);
-			textKey5.setBounds(95, 177, 228, 20);
-			textKey5.addKeyListener(new TextFieldListener(textKey5));
-		}
-		return textKey5;
-	}
-	protected JButton getBtnRestore5() {
-		if (btnRestore5 == null) {
-			btnRestore5 = new JButton("Restore");
-			btnRestore5.setHorizontalAlignment(SwingConstants.LEFT);
-			btnRestore5.setEnabled(false);
-			btnRestore5.setBounds(333, 176, 142, 23);
-			btnRestore5.setIcon(resizeImage("Trash-icon.png"));  
-			btnRestore5.addActionListener(new ActionListener() { 
-				  public void actionPerformed(ActionEvent e) { 
-					  textKey5.setText(controller.getKeyConfiguration().get("4"));
-				  } 
-				} );
-		}
-		return btnRestore5;
-	}
-	protected JLabel getLblKey6() {
-		if (lblKey6 == null) {
-			lblKey6 = new JLabel("Key 6:");
-			lblKey6.setLabelFor(getTextKey6());
-			lblKey6.setBounds(10, 212, 46, 14);
-		}
-		return lblKey6;
-	}
-	private JTextField getTextKey6() {
-		if (textKey6 == null) {
-			textKey6 = new JTextField();
-			textKey6.setEnabled(false);
-			textKey6.setColumns(10);
-			textKey6.setBounds(95, 209, 228, 20);
-			textKey6.addKeyListener(new TextFieldListener(textKey6));
-		}
-		return textKey6;
-	}
-	protected JButton getBtnRestore6() {
-		if (btnRestore6 == null) {
-			btnRestore6 = new JButton("Restore");
-			btnRestore6.setHorizontalAlignment(SwingConstants.LEFT);
-			btnRestore6.setEnabled(false);
-			btnRestore6.setBounds(333, 208, 142, 23);
-			btnRestore6.setIcon(resizeImage("Trash-icon.png"));  
-			btnRestore6.addActionListener(new ActionListener() { 
-				  public void actionPerformed(ActionEvent e) { 
-					  textKey6.setText(controller.getKeyConfiguration().get("5"));
-				  } 
-				} );
-		}
-		return btnRestore6;
-	}
+	
 	private JSeparator getSeparator_1_1() {
 		if (separator_1_1 == null) {
 			separator_1_1 = new JSeparator();
@@ -1161,8 +1176,8 @@ public class Application extends JFrame {
 		btnRestoreRGB.setEnabled(false);
 		mntmExportConfiguration.setEnabled(false);
 		mntmImportConfiguration.setEnabled(false);
-		templateSelect.setEnabled(true);
-		btnTemplate.setEnabled(true);
+		templateSelect.setEnabled(false);
+		btnTemplate.setEnabled(false);
 		
 		// Reset Arduino fields
 		textKey1.setText("");

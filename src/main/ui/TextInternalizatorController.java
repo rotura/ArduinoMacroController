@@ -16,7 +16,8 @@ public class TextInternalizatorController {
 					WARNING_SIZE, WARNING_SIZE_MESSAGE1, WARNING_SIZE_MESSAGE2,
 					WARNING_PORT, WARNING_PORT_MESSAGE,
 					CANT_OPEN_FILE,FORMAT_INCORRECT,IMPORT_SUCESSFULLY,
-					FILE_NO_SAVED,FILE_SAVED,FILE_EXIST;
+					FILE_NO_SAVED,FILE_SAVED,FILE_EXIST,
+					KEY_VOL_MUTE, KEY_VOL_UP, KEY_VOL_DOWN;
 	
 	
 	public TextInternalizatorController(Application application, Locale locale) {
@@ -98,6 +99,9 @@ public class TextInternalizatorController {
 		  this.FILE_NO_SAVED = bundle.getString("FILE_NO_SAVED");
 		  this.FILE_SAVED = bundle.getString("FILE_SAVED");
 		  this.FILE_EXIST = bundle.getString("FILE_EXIST");
+		  this.KEY_VOL_DOWN = bundle.getString("KEY_VOL_DOWN");
+		  this.KEY_VOL_MUTE = bundle.getString("KEY_VOL_MUTE");
+		  this.KEY_VOL_UP = bundle.getString("KEY_VOL_UP");
 	}
 
 	public void updateConnectButton() {
@@ -208,5 +212,16 @@ public class TextInternalizatorController {
 	public String getFILE_EXIST() {
 		return FILE_EXIST;
 	}
+
+	public String getKEY_VOL_MUTE() {
+		return KEY_VOL_MUTE;
+	}
 	
+	public String getKEY_VOL_UP() {
+		return KEY_VOL_UP;
+	}
+	
+	public String getKEY_VOL_DOWN() {
+		return KEY_VOL_DOWN;
+	}
 }

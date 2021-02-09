@@ -23,21 +23,22 @@ If you have an "arconf" folder with valid files in the same folder than the App,
 The Keyboard Layout is US. Some special characteres like "ñ" can't be used.
 - **Raw text**: Up to 19 characters (For EEPROM saving, using more only store the data on the variables).
 - **Special keys**: This keys are entered as text in the key's fields (if you press the key in the field the correspond text will be written). Only work 1 Special key for key configured. If more than one Special key or a Special key with other character is written in the field, the data will be send but the Arduino will catch only the first Special key and ignore the rest of the data. Available special keys are:
-  - **Space bar**: "space" or "".
-  - **Enter**: "enter" or "return".
-  - **Right arrow**: "rarrow".
-  - **Left arrow**: "larrow".
-  - **Up arrow**: "uarrow".
-  - **Down arrow**: "darrow".
-  - **Control**: "ctrl".
-  - **Shift**: "shift".
-  - **Alt**: "alt".
-  - **Windows or Cmd(Mac)**: "gui".
-  - **Tab**: "tab".
-  - **Mute volume**: "mute".
-  - **Increase volume**: "volup".
-  - **Decrease volume**: "volumedown". 
-  - **F1-F24**: "F1", "F2", etc. Only upper case work. Lower case will send it as Raw text
+  - **Space bar**: "space" or "". Pressing it will write the command in the field.
+  - **Enter**: "enter" or "return". Pressing it will write the command in the field.
+  - **Right arrow**: "rarrow". Pressing it will write the command in the field.
+  - **Left arrow**: "larrow". Pressing it will write the command in the field.
+  - **Up arrow**: "uarrow". Pressing it will write the command in the field.
+  - **Down arrow**: "darrow". Pressing it will write the command in the field.
+  - **Esc**: "esc". Pressing it will write the command in the field.
+  - **Control**: "ctrl". Right click to open context menu.
+  - **Shift**: "shift". Right click to open context menu.
+  - **Alt**: "alt". Right click to open context menu.
+  - **Windows or Cmd(Mac)**: "gui". Right click to open context menu.
+  - **Tab**: "tab". Right click to open context menu.
+  - **Mute volume**: "mute". Right click to open context menu.
+  - **Increase volume**: "volup". Right click to open context menu.
+  - **Decrease volume**: "volumedown".  Right click to open context menu.
+  - **F1-F24**: "F1", "F2", etc. Only upper case work. Lower case will send it as Raw text. Pressing it will write the command in the field. Keys from F13 to F24 could not work in Windows.
 - **Combinations**: Combination of keys pressed. All **Special keys** can be combined with single keys or between them using "+" as separator. Example: "ctrl+shift+t", "alt+tab", "ctrl+alt+F1".
 
 Backspace key is used to erase the configured keys.  
@@ -62,6 +63,11 @@ Folder "resource" must be configured as a source folder in the Build Path.
 jSerialComm-2.6.2.jar: https://fazecast.github.io/jSerialComm/
 
 ## Updates:
+- **v1.3**: 
+1. Added context menu over the text fields with the Special keys. Right click on the field open it, and selecting a key will write it on the field directly. Keys in the ContextMenu are media keys and modified keys.
+1. Fixed bug with export file extension in the selector.
+1. Fixed bug with template button and select. Not going disabled after disconnect.
+
 - **v1.2**: 
 1. Folder generation to all files. "./arconf" and "./arconf/log" will be generated if not exist.
 1. Template ".conf" files change to ".arconf".
